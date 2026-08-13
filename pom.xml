@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>pitest.darwin</groupId>
+  <artifactId>pitest-darwin</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>pitest-darwin</name>
+  <description>Fluent API mutation operators for PIT</description>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>11</maven.compiler.release>
+    <!-- darwin compiles against gregor internals, so this version is load bearing.
+         See docs/adr/0004-asm-relocation.md and the README's pitestVersion note. -->
+    <pitest.version>1.25.9</pitest.version>
+    <junit.version>5.13.4</junit.version>
+    <lombok.version>1.18.46</lombok.version>
+  </properties>
+
+  <dependencies>
+    <!-- provided: PIT is on the classpath at mutation time, supplied by the build tool.
+         This artifact carries ASM shaded and RELOCATED to org.pitest.reloc.asm. -->
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest</artifactId>
+      <version>${pitest.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Only for the builder fixtures: darwin's claim to mutate Lombok builders is tested, not assumed. -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <!-- Declared explicitly rather than relying on processor discovery, which recent JDKs no
+               longer do by default. -->
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.2</version>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

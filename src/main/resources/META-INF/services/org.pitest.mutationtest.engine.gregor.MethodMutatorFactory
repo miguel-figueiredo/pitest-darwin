@@ -1,0 +1,5 @@
+pitest.darwin.StreamRemoveMutator
+pitest.darwin.StreamSubstituteMutator
+pitest.darwin.OptionalRemoveMutator
+pitest.darwin.OptionalSubstituteMutator
+pitest.darwin.FluentRemoveMutator
